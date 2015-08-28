@@ -1,8 +1,11 @@
 require 'sinatra'
 require 'json'
 
-get '/'  do
+before do
 	content_type :json
+end
+
+get '/'  do
 	{
 		array: [
 			object: {
@@ -11,5 +14,11 @@ get '/'  do
 				boolen: true
 			}
 		]
+	}.to_json
+end
+
+get '/403'  do
+	halt 403, {
+		message: 'Example for 403 http status'
 	}.to_json
 end
