@@ -1,11 +1,14 @@
 require 'sinatra'
 require 'json'
-
 require_relative 'book_repository'
 
 before { content_type :json }
 
-not_found { halt 404, {}.to_json }
+configure { set :show_exceptions, false }
+
+not_found { halt 404, { message: 'NOT FOUND' }.to_json }
+
+error { halt 500, { message: 'INTERNAL SERVER ERROR' }.to_json }
 
 get '/livros' do
 	{books: BookRepository.all}.to_json
