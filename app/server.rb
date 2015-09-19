@@ -3,9 +3,9 @@ require 'json'
 
 require_relative 'book_repository'
 
-before do
-	content_type :json
-end
+before { content_type :json }
+
+not_found { halt 404, {}.to_json }
 
 get '/livros' do
 	{books: BookRepository.all}.to_json
