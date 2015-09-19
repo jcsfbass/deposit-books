@@ -19,7 +19,7 @@ get '/livros/:id' do |id|
 end
 
 post '/livros' do
-	halt 201, BookRepository.all.first.to_json
+	halt 201, BookRepository.new(JSON.parse(request.body.string)).to_json
 end
 
 delete '/livros/:id' do |id|
