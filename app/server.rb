@@ -1,42 +1,27 @@
 require 'sinatra'
 require 'json'
 
+require_relative 'book_repository'
+
 before do
 	content_type :json
-
-	@books = [
-		{
-			id: 1,
-			description: 'description 1',
-			author: 'author 1',
-			edition: 'edition 1',
-			quantity: 5
-		},
-		{
-			id: 2,
-			description: 'description 2',
-			author: 'author 2',
-			edition: 'edition 2',
-			quantity: 6
-		}
-	]
 end
 
 get '/livros' do
-	{books: @books}.to_json
+	{books: BookRepository.all}.to_json
 end
 
 get '/livros/:id' do |id|
-	@books.each do |book|
-		return book.to_json if book[:id].to_s === id
-	end
+	book = BookRepository.find(id)
+
+	return book.to_json unless book.nil?
 	halt 404
 end
 
 post '/livros' do
-	halt 201, @books.first.to_json
+	halt 201, BookRepository.all.first.to_json
 end
 
 delete '/livros/:id' do |id|
-	@books.first.to_json
+	BookRepository.all.first.to_json
 end
