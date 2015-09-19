@@ -23,5 +23,6 @@ post '/livros' do
 end
 
 delete '/livros/:id' do |id|
-	BookRepository.all.first.to_json
+		return halt 204 if BookRepository.delete(id)
+		halt 404
 end

@@ -21,6 +21,17 @@ class BookRepository
 	end
 
 	def self.find(id)
-		@books.each { |book| return book if book[:id].to_s === id }
+		@books.find { |book| book[:id].to_s === id }
+	end
+
+	def self.delete(id)
+		book = self.find(id)
+
+		unless book.nil?
+			@books.delete(book)
+			return true
+		end
+
+		false
 	end
 end
