@@ -1,0 +1,6 @@
+--color
+--require spec_helper
+--format documentation
+--pattern "tests/unit/**/*_spec.rb"
+--fail-fast
+-I tests
