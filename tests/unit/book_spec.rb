@@ -74,4 +74,20 @@ describe Book do
       end
     end
   end
+
+  describe '#to_resource' do
+    subject(:resource) { book.to_resource }
+
+    it 'should return hash with all book attributes' do
+      expect(resource[:id]).to eq(book.id)
+      expect(resource[:description]).to eq(book.description)
+      expect(resource[:author]).to eq(book.author)
+      expect(resource[:edition]).to eq(book.edition)
+      expect(resource[:quantity]).to eq(book.quantity)
+    end
+
+    it 'should return hash with 5 attributes' do
+      expect(resource.size).to eq(5)
+    end
+  end
 end
