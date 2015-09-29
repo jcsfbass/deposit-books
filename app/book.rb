@@ -27,8 +27,4 @@ class Book
 			quantity: @quantity
 		}
 	end
-
-	def self.from_resource(resource_book)
-		self.new(resource_book)
-	end
 end

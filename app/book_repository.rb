@@ -15,7 +15,7 @@ class BookRepository
 	end
 
 	def self.new(resource_book)
-		@books.push Book.from_resource(resource_book)
+		@books.push Book.new(resource_book)
 		@books.last
 	end
 
