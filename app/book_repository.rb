@@ -1,3 +1,5 @@
+require_relative 'book'
+
 class BookRepository
 	@books = [
 		Book.new(description: 'descrição 1', author: 'autor 1', edition: 1, quantity: 5),

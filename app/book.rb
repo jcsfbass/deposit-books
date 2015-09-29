@@ -26,6 +26,6 @@ class Book
 		  resource_book[field.to_sym] = resource_book.delete(field)
 		end
 
-		Book.new(resource_book)
+		self.new(resource_book)
 	end
 end
