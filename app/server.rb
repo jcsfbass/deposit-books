@@ -7,8 +7,6 @@ before { content_type :json }
 
 after { body response.body.to_json }
 
-not_found { halt 404, {message: 'Book not found'}.to_json }
-
 configure { set :show_exceptions, false }
 
 error { halt 500, {message: 'INTERNAL SERVER ERROR'} }
@@ -27,7 +25,7 @@ get '/livros/:id' do |id|
 	book = BookRepository.find(id)
 
 	return book.to_resource unless book.nil?
-	halt 404
+	halt 404, {message: 'Book not found'}
 end
 
 post '/livros' do
@@ -36,5 +34,5 @@ end
 
 delete '/livros/:id' do |id|
 	return halt 204 if BookRepository.delete(id)
-	halt 404
+	halt 404, {message: 'Book not found'}
 end
