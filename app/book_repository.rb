@@ -19,6 +19,15 @@ class BookRepository
 		@books.last
 	end
 
+	def self.update(id, partialUpdate)
+		book = self.find(id)
+
+		unless book.nil?
+			book.update(partialUpdate)
+			return book
+		end
+	end
+
 	def self.delete(id)
 		book = self.find(id)
 

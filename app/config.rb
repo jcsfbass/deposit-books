@@ -1,3 +1,5 @@
+require 'json'
+
 before { content_type :json }
 
 after { body response.body.to_json }

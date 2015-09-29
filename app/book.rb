@@ -1,7 +1,7 @@
 require 'securerandom'
 
 class Book
-	attr_accessor :id, :description, :author, :edition, :quantity;
+	attr_accessor :id, :description, :author, :edition, :quantity
 
 	def initialize(description:, author:, edition:, quantity:)
 		@id = SecureRandom.uuid
@@ -9,6 +9,13 @@ class Book
 		@author = author
 		@edition = edition
 		@quantity = quantity
+	end
+
+	def update(description: nil, author: nil, edition: nil, quantity: nil)
+		@description = description unless description.nil?
+		@author = author unless author.nil?
+		@edition = edition unless edition.nil?
+		@quantity = quantity unless quantity.nil?
 	end
 
 	def to_resource
@@ -22,10 +29,6 @@ class Book
 	end
 
 	def self.from_resource(resource_book)
-		resource_book.keys.each do |field|
-		  resource_book[field.to_sym] = resource_book.delete(field)
-		end
-
 		self.new(resource_book)
 	end
 end

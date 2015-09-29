@@ -1,3 +1,4 @@
+require_relative 'body'
 require_relative 'book_repository'
 
 get '/livros' do
@@ -14,7 +15,14 @@ get '/livros/:id' do |id|
 end
 
 post '/livros' do
-	halt 201, BookRepository.new(JSON.parse(request.body.string)).to_resource
+	halt 201, BookRepository.new(Body.new(request.body.string).to_hash).to_resource
+end
+
+patch '/livros/:id' do |id|
+	book = BookRepository.update(id, Body.new(request.body.string).to_hash)
+
+	return halt 200, book.to_resource unless book.nil?
+	halt 404, {message: 'Book not found'}
 end
 
 delete '/livros/:id' do |id|
