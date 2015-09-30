@@ -28,4 +28,35 @@ describe BookRepository do
 		  end
 		end
 	end
+
+	describe '.new' do
+		subject(:book) { BookRepository.new(attributes) }
+
+		context 'when resource is correct' do
+		  let(:attributes) { {description: 'd', author: 'a', edition: 1, quantity: 1} }
+
+		  it 'should increase book quantity' do
+		  	old_size = BookRepository.all.size
+		  	book
+		  	new_size = BookRepository.all.size
+		    expect(new_size).to eq(old_size.next)
+		  end
+
+		  it 'should return a new book' do
+		    expect(UUID.validate book.id).to be_truthy
+		    expect(book.description).to eq(attributes[:description])
+		    expect(book.author).to eq(attributes[:author])
+		    expect(book.edition).to eq(attributes[:edition])
+		    expect(book.quantity).to eq(attributes[:quantity])
+		  end
+		end
+
+		context 'when resource is not correct' do
+		  let(:attributes) { {description: 'd', author: 'a', quantity: 1} }
+
+		  it 'should raise ArgumentError' do
+		    expect{ book }.to raise_error(ArgumentError)
+		  end
+		end
+	end
 end
