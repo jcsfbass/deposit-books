@@ -30,24 +30,24 @@ describe BookRepository do
 	end
 
 	describe '.new' do
-		subject(:book) { BookRepository.new(attributes) }
+		subject(:new_book) { BookRepository.new(attributes) }
 
 		context 'when resource is correct' do
 		  let(:attributes) { {description: 'd', author: 'a', edition: 1, quantity: 1} }
 
 		  it 'should increase book quantity' do
 		  	old_size = BookRepository.all.size
-		  	book
+		  	new_book
 		  	new_size = BookRepository.all.size
 		    expect(new_size).to eq(old_size.next)
 		  end
 
 		  it 'should return a new book' do
-		    expect(UUID.validate book.id).to be_truthy
-		    expect(book.description).to eq(attributes[:description])
-		    expect(book.author).to eq(attributes[:author])
-		    expect(book.edition).to eq(attributes[:edition])
-		    expect(book.quantity).to eq(attributes[:quantity])
+		    expect(UUID.validate new_book.id).to be_truthy
+		    expect(new_book.description).to eq(attributes[:description])
+		    expect(new_book.author).to eq(attributes[:author])
+		    expect(new_book.edition).to eq(attributes[:edition])
+		    expect(new_book.quantity).to eq(attributes[:quantity])
 		  end
 		end
 
@@ -55,8 +55,42 @@ describe BookRepository do
 		  let(:attributes) { {description: 'd', author: 'a', quantity: 1} }
 
 		  it 'should raise ArgumentError' do
-		    expect{ book }.to raise_error(ArgumentError)
+		    expect{ new_book }.to raise_error(ArgumentError)
 		  end
 		end
+	end
+
+	describe '.update' do
+	  subject(:updated_book) { BookRepository.update(id, partialUpdate) }
+
+	  context 'when update existent book' do
+	    let(:id) { BookRepository.all.sample.id }
+
+	    context 'and partialUpdate is correct' do
+	      let(:partialUpdate) { {description: 'de', edition: 2} }
+
+	      it 'should update correctly' do
+	        expect(updated_book.description).to eq(partialUpdate[:description])
+	        expect(updated_book.edition).to eq(partialUpdate[:edition])
+	      end
+	    end
+
+	    context 'and partialUpdate is not correct' do
+	      let(:partialUpdate) { {incorrect: 'i'} }
+
+	      it 'should raise ArgumentError' do
+	        expect{ updated_book }.to raise_error(ArgumentError)
+	      end
+	    end
+	  end
+
+	  context 'when udpate nonexistent book' do
+	    let(:id) { SecureRandom.uuid }
+	    let(:partialUpdate) { {description: 'de', edition: 2} }
+
+	    it 'should return nil' do
+	      expect(updated_book).to be_nil
+	    end
+	  end
 	end
 end
