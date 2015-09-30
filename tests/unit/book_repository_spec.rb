@@ -13,7 +13,7 @@ describe BookRepository do
 		subject(:book) { BookRepository.find(id) }
 
 		context 'when find existent book' do
-		  let(:id) { BookRepository.all.first.id }
+		  let(:id) { BookRepository.all.sample.id }
 
 		  it 'should return a book correctly' do
 		    expect(book.id).to eq(id)
