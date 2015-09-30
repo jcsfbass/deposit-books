@@ -49,6 +49,10 @@ describe BookRepository do
 		    expect(new_book.edition).to eq(attributes[:edition])
 		    expect(new_book.quantity).to eq(attributes[:quantity])
 		  end
+
+		  it 'should save the book' do
+		    expect(BookRepository.find(new_book.id)).to eq(new_book)
+		  end
 		end
 
 		context 'when resource is not correct' do
@@ -72,6 +76,11 @@ describe BookRepository do
 	      it 'should update correctly' do
 	        expect(updated_book.description).to eq(partialUpdate[:description])
 	        expect(updated_book.edition).to eq(partialUpdate[:edition])
+
+	        book = BookRepository.find(updated_book.id)
+
+	        expect(book.description).to eq(partialUpdate[:description])
+	        expect(book.edition).to eq(partialUpdate[:edition])
 	      end
 	    end
 
@@ -84,12 +93,44 @@ describe BookRepository do
 	    end
 	  end
 
-	  context 'when udpate nonexistent book' do
+	  context 'when update nonexistent book' do
 	    let(:id) { SecureRandom.uuid }
 	    let(:partialUpdate) { {description: 'de', edition: 2} }
 
 	    it 'should return nil' do
 	      expect(updated_book).to be_nil
+	    end
+	  end
+	end
+
+	describe '.delete' do
+	  subject(:deleted) { BookRepository.delete(id) }
+
+	  context 'when delete existent book' do
+	    let(:id) { BookRepository.all.sample.id }
+
+	    it 'should return true' do
+	      expect(deleted).to be_truthy
+	    end
+
+	    it 'should decrease book quantity' do
+	    	old_size = BookRepository.all.size
+	    	deleted
+	    	new_size = BookRepository.all.size
+	      expect(new_size).to equal(old_size.pred)
+	    end
+
+	    it 'book is not saved' do
+	    	deleted
+	      expect(BookRepository.find(id)).to be_nil
+	    end
+	  end
+
+	  context 'when delete nonexistent book' do
+	    let(:id) { SecureRandom.uuid }
+
+	    it 'should return false' do
+	      expect(deleted).to be_falsy
 	    end
 	  end
 	end
