@@ -1,4 +1,4 @@
 require 'sinatra'
 
 require_relative 'config'
-require_relative 'book_controller'
+require_relative 'controllers/book_controller'

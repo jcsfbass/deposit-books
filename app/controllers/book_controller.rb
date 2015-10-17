@@ -1,5 +1,5 @@
-require_relative 'body'
-require_relative 'book_repository'
+require_relative '../helpers/body'
+require_relative '../repositories/book_repository'
 
 get '/livros' do
 	books = BookRepository.all.map { |book| book.to_resource }
