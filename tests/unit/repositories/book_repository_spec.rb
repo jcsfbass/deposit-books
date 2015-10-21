@@ -1,3 +1,4 @@
+require 'uuid'
 require 'securerandom'
 
 describe BookRepository do
