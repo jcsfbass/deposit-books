@@ -29,13 +29,6 @@ class BookRepository
 	end
 
 	def self.delete(id)
-		book = self.find(id)
-
-		unless book.nil?
-			@books.delete book
-			return true
-		end
-
-		false
+		@books.delete(self.find(id))
 	end
 end

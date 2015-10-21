@@ -105,33 +105,18 @@ describe BookRepository do
 
 	describe '.delete' do
 	  subject(:deleted) { BookRepository.delete(id) }
+    let(:id) { BookRepository.all.sample.id }
 
-	  context 'when delete existent book' do
-	    let(:id) { BookRepository.all.sample.id }
+    it 'should decrease book quantity' do
+    	old_size = BookRepository.all.size
+    	deleted
+    	new_size = BookRepository.all.size
+      expect(new_size).to equal(old_size.pred)
+    end
 
-	    it 'should return true' do
-	      expect(deleted).to be_truthy
-	    end
-
-	    it 'should decrease book quantity' do
-	    	old_size = BookRepository.all.size
-	    	deleted
-	    	new_size = BookRepository.all.size
-	      expect(new_size).to equal(old_size.pred)
-	    end
-
-	    it 'book is not saved' do
-	    	deleted
-	      expect(BookRepository.find(id)).to be_nil
-	    end
-	  end
-
-	  context 'when delete nonexistent book' do
-	    let(:id) { SecureRandom.uuid }
-
-	    it 'should return false' do
-	      expect(deleted).to be_falsy
-	    end
-	  end
+    it 'book is not saved' do
+    	deleted
+      expect(BookRepository.find(id)).to be_nil
+    end
 	end
 end

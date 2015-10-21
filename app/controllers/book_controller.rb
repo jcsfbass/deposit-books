@@ -2,9 +2,7 @@ require_relative '../helpers/body'
 require_relative '../repositories/book_repository'
 
 get '/livros' do
-	books = BookRepository.all.map { |book| book.to_resource }
-
-	{books: books}
+	BookRepository.all.map { |book| book.to_resource }
 end
 
 get '/livros/:id' do |id|
@@ -26,6 +24,6 @@ patch '/livros/:id' do |id|
 end
 
 delete '/livros/:id' do |id|
-	return halt 204 if BookRepository.delete(id)
-	halt 404, {message: 'Book not found'}
+	BookRepository.delete(id)
+	return halt 204
 end
