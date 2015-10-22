@@ -10,7 +10,7 @@ describe 'Books' do
 	end
 
   before { get '/livros' }
-  let(:books) { JSON.parse(last_response.body) }
+  subject(:books) { JSON.parse(last_response.body) }
 
   describe 'GET /livros' do
     it 'should return status 200' do
@@ -24,7 +24,7 @@ describe 'Books' do
 
   describe 'GET /livros/:id' do
   	before { get "/livros/#{id}" }
-  	let(:response) { JSON.parse(last_response.body) }
+  	subject(:response) { JSON.parse(last_response.body) }
 
   	context 'when find existent book' do
   		let(:id) { books.first['id'] }
@@ -48,6 +48,32 @@ describe 'Books' do
 	    it 'should return a error message' do
   	    expect(response['message']).to eq('Book not found')
   	  end
+  	end
+  end
+
+  describe 'DELETE /livros/:id' do
+  	before { delete "/livros/#{id}" }
+  	subject(:response) { JSON.parse(last_response.body) }
+
+  	context 'when delete existent book' do
+  		let(:id) { books.first['id'] }
+
+  		it 'should return status 204' do
+	      expect(last_response).to be_empty
+	    end
+
+	    it 'shoult not return when find it' do
+	      get "/livros/#{id}"
+	      expect(last_response).to be_not_found
+	    end
+  	end
+
+  	context 'when delete nonexistent book' do
+  	  let(:id) { SecureRandom.uuid }
+
+  	  it 'should return status 204' do
+	      expect(last_response).to be_empty
+	    end
   	end
   end
 end
