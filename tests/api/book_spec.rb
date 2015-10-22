@@ -51,6 +51,39 @@ describe 'Books' do
   	end
   end
 
+  describe 'POST /livros' do
+  	before { post '/livros', body.to_json, 'CONTENT-TYPE' => 'application/json' }
+  	subject(:response) { JSON.parse(last_response.body) }
+
+  	context 'when create book with valid body' do
+  		let(:body) { {description: 'new description', author: 'new author', edition: 2, quantity: 10} }
+
+  	  it 'should return status 201' do
+	      expect(last_response).to be_created
+	    end
+
+	    it 'should return a created book' do
+	      expect(response).to be_book
+	      expect(response['description']).to eq(body[:description])
+	      expect(response['author']).to eq(body[:author])
+	      expect(response['edition']).to eq(body[:edition])
+	      expect(response['quantity']).to eq(body[:quantity])
+	    end
+  	end
+
+  	context 'when create book with invalid body' do
+  	  let(:body) { {descriptio: 'new description', author: 'new author', quantity: 10} }
+
+  	  it 'should return status 500' do
+  	    expect(last_response).to be_server_error
+  	  end
+
+  	  it 'should return a error message' do
+  	    expect(response['message']).to eq('INTERNAL SERVER ERROR')
+  	  end
+  	end
+  end
+
   describe 'DELETE /livros/:id' do
   	before { delete "/livros/#{id}" }
   	subject(:response) { JSON.parse(last_response.body) }
@@ -65,6 +98,7 @@ describe 'Books' do
 	    it 'shoult not return when find it' do
 	      get "/livros/#{id}"
 	      expect(last_response).to be_not_found
+	      expect(response['message']).to eq('Book not found')
 	    end
   	end
 
