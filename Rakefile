@@ -10,4 +10,7 @@ namespace :test do
 	RSpec::Core::RakeTask.new(:api) do |t|
 		t.pattern = Dir.glob('tests/api/*_spec.rb')
 	end
+
+	task all: ['test:unit', 'test:api'] do
+	end
 end
