@@ -84,6 +84,54 @@ describe 'Books' do
   	end
   end
 
+  describe 'PATCH /livros/:id' do
+    before { patch "/livros/#{id}", body.to_json, 'CONTENT-TYPE' => 'application/json' }
+  	subject(:response) { JSON.parse(last_response.body) }
+
+  	context 'when update existent book' do
+  	  let(:id) { books.first['id'] }
+
+  	  context 'with valid body' do
+  	    let(:body) { {description: 'updated description', author: 'updated author'} }
+
+  	    it 'should return status 200' do
+  	      expect(last_response).to be_ok
+  	    end
+
+  	    it 'should return updated book' do
+  	      expect(response).to be_book
+  	      expect(response['description']).to eq(body[:description])
+	      	expect(response['author']).to eq(body[:author])
+  	    end
+  	  end
+
+  	  context 'with invalid body' do
+  	    let(:body) { {descriptio: 'updated description', author: 'updated author'} }
+
+	  	  it 'should return status 500' do
+	  	    expect(last_response).to be_server_error
+	  	  end
+
+	  	  it 'should return a error message' do
+	  	    expect(response['message']).to eq('INTERNAL SERVER ERROR')
+	  	  end
+  	  end
+  	end
+
+  	context 'when update nonexistent book' do
+  	  let(:id) { SecureRandom.uuid }
+  	  let(:body) { {description: 'updated description', author: 'updated author'} }
+
+  	  it 'should return status 404' do
+	      expect(last_response).to be_not_found
+	    end
+
+	    it 'should return a error message' do
+  	    expect(response['message']).to eq('Book not found')
+  	  end
+  	end
+  end
+
   describe 'DELETE /livros/:id' do
   	before { delete "/livros/#{id}" }
   	subject(:response) { JSON.parse(last_response.body) }
