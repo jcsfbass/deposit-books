@@ -2,7 +2,13 @@ require_relative '../helpers/body'
 require_relative '../repositories/book_repository'
 
 get '/livros' do
-	BookRepository.all.map { |book| book.to_resource }
+	books = BookRepository.all.map { |book| book.to_resource }
+	return books if params['limit'].nil?
+
+	limit = params['limit'].to_i.pred
+
+	return halt 400, {message: 'Limit should be greather than zero'} if limit <= 0
+	books[0..limit]
 end
 
 get '/livros/:id' do |id|

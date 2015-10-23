@@ -18,7 +18,54 @@ describe 'Books' do
     end
 
     it 'should return an array of books' do
-      books.each { |book| expect(book).to be_book }
+      books.each { |element| expect(element).to be_book }
+    end
+
+    context 'when limit is used' do
+      before { get '/livros', limit: limit }
+      subject(:response) { JSON.parse(last_response.body) }
+
+      context 'and limit is valid' do
+        let(:limit) { 10 }
+
+        it 'should return the quantity of books equal to limit' do
+          response.each { |element| expect(element).to be_book }
+          expect(response.size).to eq(limit)
+        end
+      end
+
+      context 'and limit is greather than the quantity of books' do
+        let(:limit) { books.size.next }
+
+        it 'should return the quantity of existents books' do
+          response.each { |element| expect(element).to be_book }
+          expect(response.size).to eq(books.size)
+        end
+      end
+
+      context 'and limit is zero or less than zero' do
+        let(:limit) { -1 }
+
+        it 'should return status 400' do
+          expect(last_response).to be_bad_request
+        end
+
+        it 'should return an error message' do
+          expect(response['message']).to eq('Limit should be greather than zero')
+        end
+      end
+
+      context 'and limit is not number' do
+        let(:limit) { 'is not number' }
+
+        it 'should return status 400' do
+          expect(last_response).to be_bad_request
+        end
+
+        it 'should return an error message' do
+          expect(response['message']).to eq('Limit should be greather than zero')
+        end
+      end
     end
   end
 
