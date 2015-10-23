@@ -45,7 +45,7 @@ describe 'Books' do
 	      expect(last_response).to be_not_found
 	    end
 
-	    it 'should return a error message' do
+	    it 'should return an error message' do
   	    expect(response['message']).to eq('Book not found')
   	  end
   	end
@@ -78,7 +78,7 @@ describe 'Books' do
   	    expect(last_response).to be_server_error
   	  end
 
-  	  it 'should return a error message' do
+  	  it 'should return an error message' do
   	    expect(response['message']).to eq('INTERNAL SERVER ERROR')
   	  end
   	end
@@ -112,7 +112,7 @@ describe 'Books' do
 	  	    expect(last_response).to be_server_error
 	  	  end
 
-	  	  it 'should return a error message' do
+	  	  it 'should return an error message' do
 	  	    expect(response['message']).to eq('INTERNAL SERVER ERROR')
 	  	  end
   	  end
@@ -126,7 +126,7 @@ describe 'Books' do
 	      expect(last_response).to be_not_found
 	    end
 
-	    it 'should return a error message' do
+	    it 'should return an error message' do
   	    expect(response['message']).to eq('Book not found')
   	  end
   	end
@@ -143,7 +143,7 @@ describe 'Books' do
 	      expect(last_response).to be_empty
 	    end
 
-	    it 'shoult not return when find it' do
+	    it 'should not return when find it' do
 	      get "/livros/#{id}"
 	      expect(last_response).to be_not_found
 	      expect(response['message']).to eq('Book not found')
