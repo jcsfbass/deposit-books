@@ -2,7 +2,7 @@ require_relative '../models/book'
 
 class BookRepository
 	@books = []
-	for i in (1..20)
+	for i in (1..200)
 		@books.push(Book.new(description: "descrição #{i}", author: "autor #{i}", edition: i, quantity: i))
 	end
 

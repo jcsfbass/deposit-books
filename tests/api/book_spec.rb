@@ -17,6 +17,10 @@ describe 'Books' do
       expect(last_response).to be_ok
     end
 
+    it 'should have 20 books' do
+      expect(books.size).to eq(20)
+    end
+
     it 'should return an array of books' do
       books.each { |element| expect(element).to be_book }
     end
@@ -34,12 +38,15 @@ describe 'Books' do
         end
       end
 
-      context 'and limit is greather than the quantity of books' do
-        let(:limit) { books.size.next }
+      context 'and limit is greather than 100' do
+        let(:limit) { 101 }
 
-        it 'should return the quantity of existents books' do
-          response.each { |element| expect(element).to be_book }
-          expect(response.size).to eq(books.size)
+        it 'should return status 400' do
+          expect(last_response).to be_bad_request
+        end
+
+        it 'should return an error message' do
+          expect(response['message']).to eq('Limit should be less than 100')
         end
       end
 

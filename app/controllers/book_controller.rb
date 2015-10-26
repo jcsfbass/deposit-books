@@ -3,11 +3,12 @@ require_relative '../repositories/book_repository'
 
 get '/livros' do
 	books = BookRepository.all.map { |book| book.to_resource }
-	return books if params['limit'].nil?
+	return books[0..19] if params['limit'].nil?
 
 	limit = params['limit'].to_i.pred
 
 	return halt 400, {message: 'Limit should be greather than zero'} if limit <= 0
+	return halt 400, {message: 'Limit should be less than 100'} if limit >= 99
 	books[0..limit]
 end
 
@@ -31,5 +32,5 @@ end
 
 delete '/livros/:id' do |id|
 	BookRepository.delete(id)
-	return halt 204
+	halt 204
 end
