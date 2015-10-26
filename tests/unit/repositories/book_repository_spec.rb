@@ -3,10 +3,30 @@ require 'securerandom'
 
 describe BookRepository do
 	describe '.all' do
-		subject(:books) { BookRepository.all }
+		subject(:books) { BookRepository.all(limit) }
 
-		it 'should return a array with books' do
-			books.each { |book| expect(book).to be_a(Book) }
+		context 'when get with limit' do
+			let(:limit) { 10 }
+
+			it 'quantity of books should be equal to limit' do
+				expect(books.size).to eq(limit)
+			end
+
+			it 'should return a array with books' do
+				books.each { |book| expect(book).to be_a Book }
+			end
+		end
+
+		context 'when get without limit' do
+			subject(:books) { BookRepository.all }
+
+			it 'quantity of books should be equal to 20' do
+				expect(books.size).to eq(20)
+			end
+
+			it 'should return a array with books' do
+				books.each { |book| expect(book).to be_a Book }
+			end
 		end
 	end
 
@@ -35,13 +55,6 @@ describe BookRepository do
 
 		context 'when resource is correct' do
 		  let(:attributes) { {description: 'd', author: 'a', edition: 1, quantity: 1} }
-
-		  it 'should increase book quantity' do
-		  	old_size = BookRepository.all.size
-		  	new_book
-		  	new_size = BookRepository.all.size
-		    expect(new_size).to eq(old_size.next)
-		  end
 
 		  it 'should return a new book' do
 		    expect(UUID.validate new_book.id).to be_truthy
@@ -107,13 +120,6 @@ describe BookRepository do
 	describe '.delete' do
 	  subject(:deleted) { BookRepository.delete(id) }
     let(:id) { BookRepository.all.sample.id }
-
-    it 'should decrease book quantity' do
-    	old_size = BookRepository.all.size
-    	deleted
-    	new_size = BookRepository.all.size
-      expect(new_size).to equal(old_size.pred)
-    end
 
     it 'book is not saved' do
     	deleted

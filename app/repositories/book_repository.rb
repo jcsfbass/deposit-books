@@ -6,8 +6,8 @@ class BookRepository
 		@books.push(Book.new(description: "descrição #{i}", author: "autor #{i}", edition: i, quantity: i))
 	end
 
-	def self.all
-		@books
+	def self.all(limit=20)
+		@books[0..limit.pred]
 	end
 
 	def self.find(id)
