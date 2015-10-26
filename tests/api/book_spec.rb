@@ -46,7 +46,7 @@ describe 'Books' do
         end
 
         it 'should return an error message' do
-          expect(response['message']).to eq('Limit should be less than 100')
+          expect(response['message']).to eq('Limit should be equal or less than 100')
         end
       end
 
@@ -71,6 +71,51 @@ describe 'Books' do
 
         it 'should return an error message' do
           expect(response['message']).to eq('Limit should be greather than zero')
+        end
+      end
+    end
+
+    context 'when offset is used' do
+      before { get '/livros', offset: offset }
+      subject(:response) { JSON.parse(last_response.body) }
+
+      context 'and offset is valid' do
+        let(:offset) { 20 }
+
+        it 'should start from offset' do
+          expect(response.first['description']).to match(/#{offset}/)
+        end
+      end
+
+      context 'and offset is greather than the quantity of books' do
+        let(:offset) { 200 }
+
+        it 'should return an empty array' do
+          expect(response.size).to eq(0)
+        end
+      end
+
+      context 'and offset is zero or less than zero' do
+        let(:offset) { -1 }
+
+        it 'should return status 400' do
+          expect(last_response).to be_bad_request
+        end
+
+        it 'should return an error message' do
+          expect(response['message']).to eq('Offset should be greather than zero')
+        end
+      end
+
+      context 'and offset is not number' do
+        let(:offset) { 'is not number' }
+
+        it 'should return status 400' do
+          expect(last_response).to be_bad_request
+        end
+
+        it 'should return an error message' do
+          expect(response['message']).to eq('Offset should be greather than zero')
         end
       end
     end

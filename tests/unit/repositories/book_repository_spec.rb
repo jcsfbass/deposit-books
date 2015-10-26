@@ -3,7 +3,9 @@ require 'securerandom'
 
 describe BookRepository do
 	describe '.all' do
-		subject(:books) { BookRepository.all(limit) }
+		subject(:books) { BookRepository.all(offset: offset, limit: limit) }
+		let(:limit) { 20 }
+		let(:offset) { 0 }
 
 		context 'when get with limit' do
 			let(:limit) { 10 }
@@ -26,6 +28,22 @@ describe BookRepository do
 
 			it 'should return a array with books' do
 				books.each { |book| expect(book).to be_a Book }
+			end
+		end
+
+		context 'when get with offset' do
+			let(:offset) { 20 }
+
+			it 'should start from offset' do
+				expect(books.first.description).to match(/#{offset}$/)
+			end
+		end
+
+		context 'when get withou offset' do
+			subject(:books) { BookRepository.all }
+
+			it 'should start from zero' do
+				expect(books.first.description).to match(/0$/)
 			end
 		end
 	end

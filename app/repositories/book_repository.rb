@@ -2,12 +2,12 @@ require_relative '../models/book'
 
 class BookRepository
 	@books = []
-	for i in (1..200)
+	for i in (0..199)
 		@books.push(Book.new(description: "descrição #{i}", author: "autor #{i}", edition: i, quantity: i))
 	end
 
-	def self.all(limit=20)
-		@books[0..limit.pred]
+	def self.all(offset: 0, limit: 20)
+		@books[offset..(offset+limit).pred]
 	end
 
 	def self.find(id)
@@ -24,7 +24,7 @@ class BookRepository
 
 		unless book.nil?
 			book.update(partialUpdate)
-			return book
+			book
 		end
 	end
 
