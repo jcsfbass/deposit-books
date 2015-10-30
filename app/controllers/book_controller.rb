@@ -1,29 +1,12 @@
 require_relative '../helpers/body'
+require_relative '../helpers/filter'
 require_relative '../repositories/book_repository'
 
 get '/livros' do
-	if params['limit'].nil? and params['offset'].nil?
-		BookRepository.all.map { |book| book.to_resource }
-	elsif params['limit'].nil?
-		offset = Integer(params['offset']) rescue -1
+	filters = Filter.new.filter(params)
+	return halt 400, {errors: filters[:errors]} unless filters[:errors].empty?
 
-		return halt 400, {message: 'Offset should be greather than zero'} if offset < 0
-		BookRepository.all(offset: offset).map { |book| book.to_resource }
-	elsif params['offset'].nil?
-		limit = params['limit'].to_i
-
-		return halt 400, {message: 'Limit should be greather than zero'} if limit <= 0
-		return halt 400, {message: 'Limit should be equal or less than 100'} if limit > 100
-		BookRepository.all(limit: limit).map { |book| book.to_resource }
-	else
-		limit = params['limit'].to_i
-		offset = params['offset'].to_i
-
-		return halt 400, {message: 'Limit should be greather than zero'} if limit <= 0
-		return halt 400, {message: 'Limit should be equal or less than 100'} if limit > 100
-		return halt 400, {message: 'Offset should be greather than zero'} if offset < 0
-		BookRepository.all(limit: limit, offset: offset).map { |book| book.to_resource }
-	end
+	BookRepository.all(filters[:values]).map { |book| book.to_resource }
 end
 
 get '/livros/:id' do |id|

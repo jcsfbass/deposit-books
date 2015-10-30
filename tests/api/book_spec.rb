@@ -33,12 +33,11 @@ describe 'Books' do
         let(:limit) { 10 }
 
         it 'should return the quantity of books equal to limit' do
-          response.each { |element| expect(element).to be_book }
           expect(response.size).to eq(limit)
         end
       end
 
-      context 'and limit is greather than 100' do
+      context 'and limit is invalid' do
         let(:limit) { 101 }
 
         it 'should return status 400' do
@@ -46,31 +45,7 @@ describe 'Books' do
         end
 
         it 'should return an error message' do
-          expect(response['message']).to eq('Limit should be equal or less than 100')
-        end
-      end
-
-      context 'and limit is zero or less than zero' do
-        let(:limit) { -1 }
-
-        it 'should return status 400' do
-          expect(last_response).to be_bad_request
-        end
-
-        it 'should return an error message' do
-          expect(response['message']).to eq('Limit should be greather than zero')
-        end
-      end
-
-      context 'and limit is not number' do
-        let(:limit) { 'is not number' }
-
-        it 'should return status 400' do
-          expect(last_response).to be_bad_request
-        end
-
-        it 'should return an error message' do
-          expect(response['message']).to eq('Limit should be greather than zero')
+          expect(response['errors']).to include({'message' => 'Limit should be a positive number, not null and less than 100'})
         end
       end
     end
@@ -87,15 +62,7 @@ describe 'Books' do
         end
       end
 
-      context 'and offset is greather than the quantity of books' do
-        let(:offset) { 200 }
-
-        it 'should return an empty array' do
-          expect(response.size).to eq(0)
-        end
-      end
-
-      context 'and offset is zero or less than zero' do
+      context 'and offset is invalid' do
         let(:offset) { -1 }
 
         it 'should return status 400' do
@@ -103,19 +70,39 @@ describe 'Books' do
         end
 
         it 'should return an error message' do
-          expect(response['message']).to eq('Offset should be greather than zero')
+          expect(response['errors']).to include({'message' => 'Offset should be a positive number'})
+        end
+      end
+    end
+
+    context 'when offset and limit are used' do
+      before { get '/livros', offset: offset, limit: limit }
+      subject(:response) { JSON.parse(last_response.body) }
+
+      context 'and are valid' do
+        let(:offset) { 10 }
+        let(:limit) { 20 }
+
+        it 'should return from offset' do
+          expect(response.first['description']).to match(/#{offset}/)
+        end
+
+        it 'should return the quantity of books equal to limit' do
+          expect(response.size).to eq(limit)
         end
       end
 
-      context 'and offset is not number' do
-        let(:offset) { 'is not number' }
+      context 'and are invalid' do
+        let(:offset) { -1 }
+        let(:limit) { -1 }
 
         it 'should return status 400' do
           expect(last_response).to be_bad_request
         end
 
         it 'should return an error message' do
-          expect(response['message']).to eq('Offset should be greather than zero')
+          expect(response['errors']).to include({'message' => 'Offset should be a positive number'})
+          expect(response['errors']).to include({'message' => 'Limit should be a positive number, not null and less than 100'})
         end
       end
     end

@@ -39,11 +39,26 @@ describe BookRepository do
 			end
 		end
 
-		context 'when get withou offset' do
+		context 'when get without offset' do
 			subject(:books) { BookRepository.all }
 
 			it 'should start from zero' do
 				expect(books.first.description).to match(/0$/)
+			end
+		end
+
+		context 'when offset is greater than the quantity of books' do
+			let(:offset) { 200 }
+			it 'should return an empty array' do
+				expect(books).to be_empty
+			end
+		end
+
+		context 'when limit is greater than the necessary' do
+			let(:offset) { 190 }
+			let(:limit) { 50 }
+			it 'should return the remaining quantity' do
+				expect(books.size).to eq(10)
 			end
 		end
 	end
