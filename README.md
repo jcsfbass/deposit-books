@@ -1,3 +1,5 @@
+[![Stories in Ready](https://badge.waffle.io/jcsfbass/deposit-books.svg?label=ready&title=A%20Fazer)](https://waffle.io/jcsfbass/deposit-books)
+[![Stories in Progress](https://badge.waffle.io/jcsfbass/deposit-books.svg?label=In%20Progress&title=Fazendo)](https://waffle.io/jcsfbass/deposit-books)
 # Depósito de livros
 
 
